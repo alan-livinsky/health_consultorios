@@ -32,7 +32,7 @@
 
         <menuitem
             id="menu_consultorios"
-            parent="health.gnuhealth_menu"
+            parent="health.gnuhealth_appointment_menu"
             action="act_consultorios"
             name="Consultorios"
             sequence="120"
