@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 
-from setuptools import setup
-import re
-import os
+from pathlib import Path
 import configparser
+import re
+
+from setuptools import setup
+
+
+MODULE_DIR = Path(__file__).resolve().parent
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return (MODULE_DIR / fname).read_text(encoding='utf-8')
 
 
 config = configparser.ConfigParser()
-config.readfp(open('tryton.cfg'))
+with (MODULE_DIR / 'tryton.cfg').open(encoding='utf-8') as cfg_file:
+    config.read_file(cfg_file)
 info = dict(config.items('tryton'))
 
 for key in ('depends', 'extras_depend', 'xml'):
@@ -40,7 +45,7 @@ requires.append('trytond >= %s.%s, < %s.%s' %
     (major_version, minor_version, major_version, minor_version + 1))
 
 setup(
-    name='health_consultorios_fiuner',
+    name='z_health_consulting_rooms',
     version=info.get('version', '0.0.1'),
     description=info.get(
         'description',
@@ -50,12 +55,12 @@ setup(
     author_email='',
     url='',
     download_url='',
-    package_dir={'trytond.modules.health_consultorios_fiuner': '.'},
+    package_dir={'trytond.modules.z_health_consulting_rooms': '.'},
     packages=[
-        'trytond.modules.health_consultorios_fiuner',
+        'trytond.modules.z_health_consulting_rooms',
     ],
     package_data={
-        'trytond.modules.health_consultorios_fiuner': info.get('xml', []) +
+        'trytond.modules.z_health_consulting_rooms': info.get('xml', []) +
         info.get('translation', []) +
         ['tryton.cfg', 'view/*.xml'],
     },
@@ -69,16 +74,19 @@ setup(
         'Natural Language :: Spanish',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3 :: Only',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
     ],
     license='GPL-3',
+    python_requires='>=3.10,<3.11',
     install_requires=requires,
     extras_require={},
     zip_safe=False,
     entry_points="""
     [trytond.modules]
-    health_consultorios_fiuner = trytond.modules.health_consultorios_fiuner
+    z_health_consulting_rooms = trytond.modules.z_health_consulting_rooms
     """,
     test_suite='tests',
     test_loader='trytond.test_loader:Loader',
