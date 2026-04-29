@@ -29,14 +29,16 @@ requires = []
 fiuner_modules = ['health_appointment_screen_fiuner']
 
 for dep in info.get('depends', []):
-    if dep == 'health':
+    if dep in fiuner_modules:
+        requires.append('%s == %s' % (dep, info.get('version')))
+    elif dep == 'health':
         requires.append('gnuhealth == %s' % (info.get('version')))
     elif dep.startswith('health_') and dep not in fiuner_modules:
         health_package = dep.split('_', 1)[1]
         requires.append('gnuhealth_%s == %s' %
             (health_package, info.get('version')))
     else:
-        if not re.match(r'(ir|res|webdav)(\W|$)', dep) and dep not in fiuner_modules:
+        if not re.match(r'(ir|res|webdav)(\W|$)', dep):
             requires.append('trytond_%s >= %s.%s, < %s.%s' %
                 (dep, major_version, minor_version, major_version,
                     minor_version + 1))
